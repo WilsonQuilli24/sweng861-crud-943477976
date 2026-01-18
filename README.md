@@ -1,1 +1,5 @@
-# SWENG 861 CRUD Project
+# Wilson Quilli
+
+## SWENG 861: Software Construction
+
+## Social Media App for College Students
