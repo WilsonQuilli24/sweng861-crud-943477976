@@ -1,2 +1,5 @@
-# sweng861-crud-943477976
-All work in SWENG 861
+# Wilson Quilli
+
+# SWENG 861 - Software Construction
+
+# Social Media App For College Students
