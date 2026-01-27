@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wilson Assignment 2: Cloud</title>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://sweng-861-bucket2401.s3.us-east-2.amazonaws.com; script-src 'self'; style-src 'self';">
+</head>
+<body>
+    <h1>My Image using AWS</h1>
+
+    <img src="https://sweng-861-bucket2401.s3.us-east-2.amazonaws.com/IMG_6701.jpeg" alt="AWS Hosted Image" height="100" width="100">
+
+    <h1> Login Section </h1>
+    <button> <a href= "/auth/login"> Login with Google </a> </button>
+
+    <script>
+        function sanitize(input) {
+            const div = document.createElement("div");
+            div.textContent = input;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
