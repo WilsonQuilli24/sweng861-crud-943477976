@@ -20,6 +20,9 @@ The user clicks “Log in with Google” and is redirected to Google’s OAuth a
 - ID token received  
 - Authenticated user identity available to protected APIs
 
+![Login Section in HTML File](screenshots/Login Section.png)
+![Successful Login](screenshots/Successful Login.png)
+
 ## Protected Endpoint Description
 
 The application secures the GET /api/hello endpoint using a reusable authentication middleware called require_auth. This middleware runs before the endpoint handler and verifies that the user is authenticated by checking for a valid session established during the OAuth login flow. If authentication fails or no session is present, the middleware immediately returns a 401 Unauthorized JSON response without executing the endpoint logic. When authentication succeeds, the middleware attaches the authenticated user’s identity to the request context, allowing the endpoint handler to safely generate a personalized greeting using the user’s email while avoiding exposure of sensitive data.
@@ -43,11 +46,15 @@ The application secures the GET /api/hello endpoint using a reusable authenticat
 - Result: 401 Unauthorized
 - Response includes a JSON error message indicating authentication is required.
 
+![Unauthenticated request returning 401](screenshots/Unauthorized Example.png)
+
 ### Test 2: Authenticated Request
 - Endpoint: GET /api/hello
 - Condition: User logged in via Google OAuth
 - Result: 200 OK
 - Response returns a personalized greeting using the authenticated user’s email.
+
+![Authenticated request returning 200](screenshots/200 Status Code.png)
 
 Manual testing was performed using a browser, Google Chrome, to demonstrate the full OAuth login flow and protected API access.
 
