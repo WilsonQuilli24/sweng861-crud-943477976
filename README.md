@@ -20,8 +20,8 @@ The user clicks “Log in with Google” and is redirected to Google’s OAuth a
 - ID token received  
 - Authenticated user identity available to protected APIs
 
-![Login Section in HTML File](screenshots/Login Section.png)
-![Successful Login](screenshots/Successful Login.png)
+![Login Section in HTML File](screenshots/Login_Section.png)
+![Successful Login](screenshots/Successful_Login.png)
 
 ## Protected Endpoint Description
 
@@ -46,7 +46,7 @@ The application secures the GET /api/hello endpoint using a reusable authenticat
 - Result: 401 Unauthorized
 - Response includes a JSON error message indicating authentication is required.
 
-![Unauthenticated request returning 401](screenshots/Unauthorized Example.png)
+![Unauthenticated request returning 401](screenshots/Unauthorized_Example.png)
 
 ### Test 2: Authenticated Request
 - Endpoint: GET /api/hello
@@ -54,7 +54,7 @@ The application secures the GET /api/hello endpoint using a reusable authenticat
 - Result: 200 OK
 - Response returns a personalized greeting using the authenticated user’s email.
 
-![Authenticated request returning 200](screenshots/200 Status Code.png)
+![Authenticated request returning 200](screenshots/200_Status_Code.png)
 
 Manual testing was performed using a browser, Google Chrome, to demonstrate the full OAuth login flow and protected API access.
 
