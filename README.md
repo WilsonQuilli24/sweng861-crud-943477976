@@ -6,9 +6,7 @@
 A social media app used only by college students, their accounts will expire once they graduate college and can only create accounts, while in college. This allows for stduents to document and share their college experience, showcasing everything they have learned and done and any new people they have met. 
 
 ## Authentication Strategy
-
-### Chosen Authentication Option
-I implemented Option A: Social Login (B2C) using Google as the Identity Provider (IdP). This approach follows industry best practices by integrating with a trusted external identity provider rather than building authentication from scratch. It is well suited for consumer-style, student-facing applications like this social media platform. Using OAuth2 and OpenID Connect improves security while simplifying the login experience for users.
+I implemented Option A: Social Login (B2C) using Google as the Identity Provider (IdP). This approach follows industry practices by integrating with a trusted external identity provider rather than building authentication from scratch. A lot of people all around the world also use Google, making it easier to sign in with Google. It is well suited for consumer-style, student-facing applications like this social media platform. Using OAuth2 and OpenID Connect improves security while simplifying the login experience for users.
 
 ### Authentication Flow Description
 The user clicks “Log in with Google” and is redirected to Google’s OAuth authorization endpoint. After authenticating and granting consent, Google redirects the user back to the application with an authorization code. The backend exchanges this code for tokens, validates the OpenID Connect ID token, and extracts the user’s identity information (such as email and name).
