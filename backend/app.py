@@ -238,22 +238,127 @@ def cached_get_breeds():
 def api_hello():
     return jsonify({"message": f"Hello, {request.user_email}!"})
 
-@app.route("/api/breeds", methods=["GET"])
-@require_jwt()
-def get_breeds():
-    return jsonify(cached_get_breeds())
+@app.route("/api/breeds", methods=["POST"])
+@require_jwt(role="admin")
+def create_breed():
+    data = request.json
+    if not data or "breed" not in data:
+        return jsonify({"error": "Missing 'breed' field"}), 400
+    breed_name = data["breed"].strip()
+    if not breed_name:
+        return jsonify({"error": "Breed name cannot be empty"}), 400
 
-@app.route("/api/breeds/<int:breed_id>", methods=["GET"])
-@require_jwt()
-def get_breed(breed_id):
     conn = get_dog_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, breed FROM breeds WHERE id = ?", (breed_id,))
-    row = cursor.fetchone()
+    try:
+        cursor.execute("INSERT INTO breeds (breed) VALUES (?)", (breed_name,))
+        breed_id = cursor.lastrowid
+        conn.commit()
+    except sqlite3.IntegrityError:
+        conn.close()
+        return jsonify({"error": "Breed already exists"}), 400
     conn.close()
-    if not row:
-        abort(404)
-    return jsonify({"id": row[0], "breed": row[1]})
+    cached_get_breeds.cache_clear()
+    return jsonify({"id": breed_id, "breed": breed_name}), 201
+
+@app.route("/api/breeds/<int:breed_id>", methods=["PUT"])
+@require_jwt(role="admin")
+def update_breed(breed_id):
+    data = request.json
+    if not data or "breed" not in data:
+        return jsonify({"error": "Missing 'breed' field"}), 400
+    breed_name = data["breed"].strip()
+    if not breed_name:
+        return jsonify({"error": "Breed name cannot be empty"}), 400
+
+    conn = get_dog_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM breeds WHERE id = ?", (breed_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"error": "Breed not found"}), 404
+    cursor.execute("UPDATE breeds SET breed = ? WHERE id = ?", (breed_name, breed_id))
+    conn.commit()
+    conn.close()
+    cached_get_breeds.cache_clear()
+    return jsonify({"id": breed_id, "breed": breed_name}), 200
+
+@app.route("/api/breeds/<int:breed_id>", methods=["DELETE"])
+@require_jwt(role="admin")
+def delete_breed(breed_id):
+    conn = get_dog_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM breeds WHERE id = ?", (breed_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"error": "Breed not found"}), 404
+    cursor.execute("DELETE FROM subbreeds WHERE breed_id = ?", (breed_id,))
+    cursor.execute("DELETE FROM breeds WHERE id = ?", (breed_id,))
+    conn.commit()
+    conn.close()
+    cached_get_breeds.cache_clear()
+    return jsonify({"message": f"Breed {breed_id} deleted"}), 200
+
+@app.route("/api/subbreeds", methods=["POST"])
+@require_jwt(role="admin")
+def create_subbreed():
+    data = request.json
+    if not data or "breed_id" not in data or "subbreed" not in data:
+        return jsonify({"error": "Missing 'breed_id' or 'subbreed'"}), 400
+    subbreed_name = data["subbreed"].strip()
+    if not subbreed_name:
+        return jsonify({"error": "Subbreed name cannot be empty"}), 400
+
+    conn = get_dog_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM breeds WHERE id = ?", (data["breed_id"],))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"error": "Parent breed not found"}), 404
+
+    cursor.execute(
+        "INSERT INTO subbreeds (breed_id, subbreed) VALUES (?, ?)",
+        (data["breed_id"], subbreed_name)
+    )
+    sub_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    return jsonify({"id": sub_id, "breed_id": data["breed_id"], "subbreed": subbreed_name}), 201
+
+@app.route("/api/subbreeds/<int:sub_id>", methods=["PUT"])
+@require_jwt(role="admin")
+def update_subbreed(sub_id):
+    data = request.json
+    if not data or "subbreed" not in data:
+        return jsonify({"error": "Missing 'subbreed' field"}), 400
+    subbreed_name = data["subbreed"].strip()
+    if not subbreed_name:
+        return jsonify({"error": "Subbreed name cannot be empty"}), 400
+
+    conn = get_dog_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM subbreeds WHERE id = ?", (sub_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"error": "Subbreed not found"}), 404
+    cursor.execute("UPDATE subbreeds SET subbreed = ? WHERE id = ?", (subbreed_name, sub_id))
+    conn.commit()
+    conn.close()
+    return jsonify({"id": sub_id, "subbreed": subbreed_name}), 200
+
+@app.route("/api/subbreeds/<int:sub_id>", methods=["DELETE"])
+@require_jwt(role="admin")
+def delete_subbreed(sub_id):
+    conn = get_dog_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM subbreeds WHERE id = ?", (sub_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"error": "Subbreed not found"}), 404
+    cursor.execute("DELETE FROM subbreeds WHERE id = ?", (sub_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": f"Subbreed {sub_id} deleted"}), 200
 
 @app.route("/api/breeds/fetch_external", methods=["POST"])
 @require_jwt(role="admin")
