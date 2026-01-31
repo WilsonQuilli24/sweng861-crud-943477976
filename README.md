@@ -102,10 +102,14 @@ POST /api/breeds/fetch_external
 - The database is initialized at startup, and cached endpoints are cleared after updates.
 
 ## Sample Tests of Backend Screenshots (Taken in Postman)
+1. Unauthorized URL
 ![Unauthorized URL](screenshots/Unauthorized_URL.png)
 
+2. Authorized URL
 ![Authorized URL](screenshots/Authorized_URL.png)
 
+3. Fake URL
 ![Fake URL](screenshots/Fake_URL.png)
 
+4. Breeds Display
 ![Breeds Display](screenshots/Dog_Breeds.png)
