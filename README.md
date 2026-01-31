@@ -113,3 +113,15 @@ POST /api/breeds/fetch_external
 
 4. Breeds Display
 ![Breeds Display](screenshots/Dog_Breeds.png)
+
+5. GET Dog Breeds
+![GET Dog Breeds](screenshots/GET_Dog_Breeds.png)
+
+6. POST Shih Tzu
+![POST Shih Tzu](screenshots/POST_Shih_Tzu.png)
+
+7. PUT Mini Poodle
+![POST Mini Poodle](screenshots/PUT_Mini_Poodle.png)
+
+8. DELETE Mini Poodle
+![Delete Mini Poodle](screenshots/Delete_Mini_Poodle.png)
