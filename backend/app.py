@@ -18,7 +18,8 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev")
 Swagger(app)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir, 'users.db')}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
@@ -237,6 +238,11 @@ def cached_get_breeds():
 @require_jwt()
 def api_hello():
     return jsonify({"message": f"Hello, {request.user_email}!"})
+
+@app.route("/api/breeds", methods=["GET"])
+@require_jwt()
+def get_breeds():
+    return jsonify(cached_get_breeds())
 
 @app.route("/api/breeds", methods=["POST"])
 @require_jwt(role="admin")
