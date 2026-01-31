@@ -72,7 +72,7 @@ Basic security hardening was implemented to protect authentication and API endpo
 ## Short Summary
 I used Option A: Social Login (B2C) with Google as the Identity Provider (IdP). The login flow works from start to finish: when a user clicks “Log in with Google,” they are sent to Google to sign in and give permission to their Google Account. Google then sends them back to my backend at /auth/callback, which exchanges the code for an ID token, checks that it is valid, and either adds a new user or updates an existing user in the database. After logging in, the user gets a session that lets them access the protected endpoint GET /api/hello. I checked all the authentication code for security problems. Tokens are validated using Google’s library, no tokens are logged, and secrets like Google_Client_Secret and Flask_Secret_Key are kept safe in environment variables in an .env file. One problem I ran into was a missing column for last_login_at in the database, which I fixed by updating the model and running db.create_all(). I also added bonus features: simple rate limiting on login and protected endpoints, and logging of suspicious activity, like unauthorized requests or too many requests from the same IP. Overall, the assignment was about security and ensuring my webpage isn't bombarded by attacks.
 
-## Part 1: Consuming 3rd Party API and Data Validation
+## Consuming 3rd Party API and Data Validation
 To consume a 3rd-party API, I integrated the Dog CEO API (`https://dog.ceo/api/breeds/list/all`) into my application. This API provides a JSON list of dog breeds and their sub-breeds.  
 
 ### API Consumption Flow
@@ -100,3 +100,16 @@ POST /api/breeds/fetch_external
   - subbreeds table: id, breed_id (foreign key), subbreed
 - Sub-breeds are linked to their parent breed through a breed_id.
 - The database is initialized at startup, and cached endpoints are cleared after updates.
+
+## Sample Tests of Backend Screenshots (Taken in Postman)
+1. Unauthorized URL
+![Unauthorized URL](screenshots/Unauthorized_URL.png)
+
+2. Authorized URL
+![Authorized URL](screenshots/Authorized_URL.png)
+
+3. Fake URL
+![Fake URL](screenshots/Fake_URL.png)
+
+4. Breeds Display
+![Breeds Display](screenshots/Dog_Breeds.png)
