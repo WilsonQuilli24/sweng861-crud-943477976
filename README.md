@@ -71,3 +71,32 @@ Basic security hardening was implemented to protect authentication and API endpo
 
 ## Short Summary
 I used Option A: Social Login (B2C) with Google as the Identity Provider (IdP). The login flow works from start to finish: when a user clicks “Log in with Google,” they are sent to Google to sign in and give permission to their Google Account. Google then sends them back to my backend at /auth/callback, which exchanges the code for an ID token, checks that it is valid, and either adds a new user or updates an existing user in the database. After logging in, the user gets a session that lets them access the protected endpoint GET /api/hello. I checked all the authentication code for security problems. Tokens are validated using Google’s library, no tokens are logged, and secrets like Google_Client_Secret and Flask_Secret_Key are kept safe in environment variables in an .env file. One problem I ran into was a missing column for last_login_at in the database, which I fixed by updating the model and running db.create_all(). I also added bonus features: simple rate limiting on login and protected endpoints, and logging of suspicious activity, like unauthorized requests or too many requests from the same IP. Overall, the assignment was about security and ensuring my webpage isn't bombarded by attacks.
+
+## Part 1: Consuming 3rd Party API and Data Validation
+To consume a 3rd-party API, I integrated the Dog CEO API (`https://dog.ceo/api/breeds/list/all`) into my application. This API provides a JSON list of dog breeds and their sub-breeds.  
+
+### API Consumption Flow
+
+1. Admin users can trigger a fetch from the Dog CEO API via a protected endpoint:  
+POST /api/breeds/fetch_external
+
+2. The backend requests data from the Dog CEO API using Python’s requests library.
+
+3. The response is validated:
+   - Ensures the JSON contains a message object.
+   - Confirms each breed is a non-empty string.
+   - Ignores invalid or empty sub-breeds.
+
+### Data Validation
+- The API response is checked for the correct structure before inserting into the database.
+- Breeds and sub-breeds are stripped of leading/trailing spaces.
+- Duplicate entries are ignored using INSERT OR IGNORE in SQLite.
+- Invalid or empty data is skipped to prevent corrupt or malformed entries.
+
+### Database Persistence
+- Validated breeds are stored in a local SQLite database (dog_api.db).
+- Schema includes:
+  - breeds table: id, breed
+  - subbreeds table: id, breed_id (foreign key), subbreed
+- Sub-breeds are linked to their parent breed through a breed_id.
+- The database is initialized at startup, and cached endpoints are cleared after updates.
