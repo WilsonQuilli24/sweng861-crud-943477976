@@ -128,7 +128,7 @@ POST /api/breeds/fetch_external
 
 ### How to Run
 Frontend - From the repo root run:
-1. cd frontend/Digital
+1. cd frontend
 2. npm install
 3. npm run dev
 
