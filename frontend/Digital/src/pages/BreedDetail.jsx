@@ -3,41 +3,51 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiClient.js";
+import api from "../services/apiClient.js";
+import { useLocale } from '../i18n.js';
 
 function BreedDetail() {
   const { id } = useParams();
   const [breed, setBreed] = useState("");
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     const fetchBreedAndImage = async () => {
       try {
         const data = await apiFetch(`/breeds/${id}`);
         if (!data) {
-          console.error("Could not fetch breed from backend");
+          setErrorMsg("Could not fetch breed from backend.");
           return;
         }
 
-        const actualBreed = data.breed.toLowerCase();
+        const actualBreed = (data.breed || "").toLowerCase();
         setBreed(actualBreed);
 
         try {
-          const jsonImg = await fetch(
+          const resp = await api.get(
             `https://dog.ceo/api/breed/${actualBreed}/images/random`
-          ).then(res => res.json());
-
-          if (jsonImg.status === "success") {
+          );
+          const jsonImg = resp.data;
+          if (jsonImg?.status === "success") {
             setImage(jsonImg.message);
           } else {
-            setImage("/placeholder-dog.jpg"); 
+            setImage("/placeholder-dog.jpg");
           }
-        } catch {
-          setImage("/placeholder-dog.jpg"); 
+        } catch (err) {
+          console.warn("Image fetch failed", err);
+          setImage("/placeholder-dog.jpg");
         }
-
       } catch (err) {
-        console.error(err);
+        if (err?.response?.status === 404) {
+          setErrorMsg("This item does not exist or has been deleted.");
+        } else if (err?.response?.status === 403) {
+          setErrorMsg("You are not authorized to view this item.");
+        } else {
+          console.error(err);
+          setErrorMsg("Could not load breed. Please try again.");
+        }
       } finally {
         setLoading(false);
       }
@@ -47,6 +57,19 @@ function BreedDetail() {
   }, [id]);
 
   if (loading) return <p>Loading...</p>;
+  const { t } = useLocale();
+
+  if (loading) return <p>{t('loading')}</p>;
+  if (errorMsg)
+    return (
+      <>
+        <Navbar />
+        <main style={{ textAlign: "center", marginTop: "2rem" }}>
+          <p style={{ color: "red" }}>{errorMsg}</p>
+        </main>
+        <Footer />
+      </>
+    );
 
   return (
     <>

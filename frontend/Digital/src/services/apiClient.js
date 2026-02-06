@@ -1,25 +1,56 @@
-export async function apiFetch(endpoint, options = {}) {
-  const token = localStorage.getItem("token");
-  const baseURL = "http://localhost:5002"; 
+import axios from 'axios';
 
-  const headers = {
-    "Content-Type": "application/json",
-    ...options.headers,
-  };
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE ?? '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
-  try {
-    const res = await fetch(`${baseURL}/api${endpoint}`, { ...options, headers });
-    if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || "API Error");
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return await res.json();
-  } catch (err) {
-    console.error("API fetch error:", err);
-    throw err;
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+    if (status === 401 || status === 403) {
+      localStorage.removeItem('token');
+      window.location.href = '/login?error=unauthorized';
+    }
+    return Promise.reject(error);
   }
+);
+
+export async function apiFetch(path, options = {}) {
+  const { method = 'GET', data, body, params, headers } = options;
+  const res = await api.request({
+    url: path,
+    method: method.toUpperCase(),
+    data: body ?? data,
+    params,
+    headers,
+  });
+  return res.data;
 }
+
+export async function apiPost(path, data = {}, options = {}) {
+  const res = await api.post(path, data, options);
+  return res.data;
+}
+
+export async function apiPut(path, data = {}, options = {}) {
+  const res = await api.put(path, data, options);
+  return res.data;
+}
+
+export default api;

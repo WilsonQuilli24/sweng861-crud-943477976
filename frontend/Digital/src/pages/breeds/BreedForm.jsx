@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { apiFetch, apiPost, apiPut } from "../apiClient";
+import { apiFetch, apiPost, apiPut } from "../../services/apiClient.js";
+import { useLocale } from '../../i18n.js';
 
 function BreedForm() {
   const { id } = useParams();
@@ -8,6 +9,7 @@ function BreedForm() {
   const [breed, setBreed] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useLocale();
 
   useEffect(() => {
     if (id) {
@@ -25,7 +27,7 @@ function BreedForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!breed.trim()) {
-      setError("Breed name is required.");
+      setError(t('requiredBreed'));
       return;
     }
     setLoading(true);
@@ -38,9 +40,9 @@ function BreedForm() {
 
       if (result && !result.error) {
         navigate(id ? `/breeds/${id}` : "/breeds");
-        alert("Breed saved successfully!");
+        alert(t('save') + 'd');
       } else {
-        setError(result?.error || "Could not save. Please try again.");
+        setError(result?.error || t('couldNotLoad'));
       }
     } catch {
       setError("Could not save. Please try again.");
@@ -61,7 +63,7 @@ function BreedForm() {
           {loading ? "Saving..." : "Save"}
         </button>
 
-        {error && <p className="error-msg">{error}</p>}
+        {error && <p className="error-msg" role="alert">{error}</p>}
       </form>
     </div>
   );

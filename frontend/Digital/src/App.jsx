@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import BreedDetail from "./pages/BreedDetail.jsx";
+import BreedForm from "./pages/breeds/BreedForm.jsx";
+import Navbar from './components/Navbar.jsx';
+import Login from "./pages/Login.jsx";
+import { LocaleProvider } from './i18n.js';
 
 function App() {
   const navigate = useNavigate();
@@ -25,14 +29,19 @@ function App() {
   }, [navigate]);
   
   return (
-    <>
+    <LocaleProvider>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
++       <Route path="/login" element={<Login/>} />
         <Route path="/breeds" element={<Breeds />} />
+        <Route path="/breeds/new" element={<BreedForm />} />
+        <Route path="/breeds/:id/edit" element={<BreedForm />} />
         <Route path="/breeds/:id" element={<BreedDetail />} />
       </Routes>
-    </>
+    </LocaleProvider>
+    
   );
 }
 

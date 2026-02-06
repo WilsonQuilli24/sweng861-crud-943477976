@@ -127,5 +127,11 @@ POST /api/breeds/fetch_external
 ![Delete Mini Poodle](screenshots/Delete_Mini_Poodle.png)
 
 ### How to Run
-Frontend - npm start within frontend folder
-Backend - python3 app.py within backend folder
+Frontend - From the repo root run:
+1. cd frontend/Digital
+2. npm install
+3. npm run dev
+
+Backend - From the repo root run:
+1. cd backend
+2. python3 app.py

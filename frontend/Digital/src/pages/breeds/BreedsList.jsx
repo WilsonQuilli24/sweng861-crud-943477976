@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiFetch } from "../apiClient";
+import { apiFetch } from "../../services/apiClient.js";
 
 function BreedsList() {
   const [breeds, setBreeds] = useState([]);
