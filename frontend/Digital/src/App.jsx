@@ -5,7 +5,7 @@ import Breeds from './pages/Breeds.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import BreedDetail from "./pages/breeds/BreedDetail.jsx";
+import BreedDetail from "./pages/BreedDetail.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/breeds" element={<Breeds />} />
-        <Route path="/brees/:id" element={<BreedDetail />} />
+        <Route path="/breeds/:id" element={<BreedDetail />} />
       </Routes>
     </>
   );

@@ -37,15 +37,15 @@ function Breeds() {
 
         {!loading && !error && (
           <div className="breeds-grid">
-            {breeds.map((b) => (
-              <Link to={`/breeds/${b.id}`} key={b.id} className="breed-card">
-                <h2>{b.breed}</h2>
-              </Link>
+          {breeds.map((b) => (
+            <Link to={`/breeds/${b.id}`} key={b.id} className="breed-card">
+              <img src={`https://dog.ceo/api/breed/${b.breed.toLowerCase()}/images/random`} alt={b.breed} onError={(e) => e.target.style.display = 'none'}/>
+              <h2>{b.breed}</h2>
+            </Link>
             ))}
           </div>
         )}
       </main>
-
       <Footer />
     </>
   );
