@@ -24,8 +24,19 @@ function BreedDetail() {
 
         const actualBreed = (data.breed || "").toLowerCase();
         setBreed(actualBreed);
-        // Build image URL - use a direct img tag to avoid CORS
-        setImage(`https://dog.ceo/api/breed/${actualBreed}/images/random`);
+
+        const imageResponse = await fetch(
+          `https://dog.ceo/api/breed/${actualBreed}/images/random`
+        );
+        if (!imageResponse.ok) {
+          throw new Error(`Dog API error: ${imageResponse.status}`);
+        }
+        const imageData = await imageResponse.json();
+        if (imageData?.message) {
+          setImage(imageData.message);
+        } else {
+          throw new Error("Dog API returned unexpected response.");
+        }
       } catch (err) {
         if (err?.response?.status === 404) {
           setErrorMsg("This item does not exist or has been deleted.");

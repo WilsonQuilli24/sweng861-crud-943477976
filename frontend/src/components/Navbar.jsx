@@ -41,9 +41,9 @@ function Navbar() {
         </div>
 
         <div className={`nav-menu ${menuOpen ? "active" : ""}`} role="navigation" aria-label="Main navigation">
-          <Link to="/" onClick={() => setMenuOpen(false)}>{t('home')}</Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)}>{t('about')}</Link>
-          <Link to="/breeds" onClick={() => setMenuOpen(false)}>{t('breeds')}</Link>
+          <button> <Link to="/" className = "nav-menu-links" onClick={() => setMenuOpen(false)}>{t('home')}</Link> </button>
+          <button> <Link to="/about" className = "nav-menu-links" onClick={() => setMenuOpen(false)}>{t('about')}</Link> </button>
+          <button> <Link to="/breeds" className = "nav-menu-links" onClick={() => setMenuOpen(false)}>{t('breeds')}</Link> </button>
 
           <div style={{ marginLeft: 8 }}>
             <label htmlFor="locale-select" className="sr-only">Language</label>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
 :root {
   --primary: #f4a261;  
   --secondary: #264653; 
@@ -7,6 +9,40 @@
   --text-light: #ffffff;
   --border-radius: 8px;
   --transition: 0.25s ease;
+  --shadow-sm: 0 6px 14px rgba(0,0,0,0.08);
+  --shadow-md: 0 12px 28px rgba(0,0,0,0.12);
+  --shadow-lg: 0 18px 40px rgba(0,0,0,0.18);
+  --ring: 0 0 0 3px rgba(244, 162, 97, 0.35);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+  color: var(--text-dark);
+  background: radial-gradient(circle at top left, rgba(244, 162, 97, 0.18), transparent 45%),
+    radial-gradient(circle at bottom right, rgba(38, 70, 83, 0.15), transparent 50%),
+    #fffdf9;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo h1,
+.home-hero h1,
+.about-hero h1,
+.breeds-container h1 {
+  font-family: 'Playfair Display', 'Source Sans 3', serif;
+  letter-spacing: 0.5px;
 }
 
 .navbar-container {
@@ -19,7 +55,8 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(6px);
 }
 
 .logo {
@@ -60,11 +97,12 @@
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid var(--primary);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .logo img:hover {
   transform: scale(1.05);
-  transition: transform 0.2s ease;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
 }
 
 .navbar-container i,
@@ -77,6 +115,35 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: var(--secondary);
+  font-weight: 600;
+  position: relative;
+  transition: color var(--transition);
+}
+
+.nav-menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 2px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-menu a:hover,
+.nav-menu a:focus-visible {
+  color: var(--accent);
+}
+
+.nav-menu a:hover::after,
+.nav-menu a:focus-visible::after {
+  width: 100%;
 }
 
 .user-info i {
@@ -102,13 +169,19 @@
   border-radius: var(--border-radius);
   cursor: pointer;
   font-weight: 500;
-  transition: background-color var(--transition);
+  transition: background-color var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
 .login-link:hover,
-.login-link:focus {
+.login-link:focus-visible {
   background-color: var(--accent);
-  outline: none;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.login-link:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .hamburger {
@@ -121,6 +194,14 @@
   background-color: var(--secondary);
   border-radius: 2px;
   transition: all var(--transition);
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: 6px;
 }
 
 @media (max-width: 768px) {
@@ -140,12 +221,13 @@
     align-items: center;
     padding: 1rem;
     border-radius: var(--border-radius);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-md);
     display: none;
     width: 200px;
     z-index: 999;
     gap: 0.75rem;
     text-align: center;
+    animation: dropIn 0.25s ease;
   }
 
   .nav-menu.active {
@@ -180,6 +262,17 @@
   }
 } 
 
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Login Modal */
 .modal-backdrop {
   position: fixed;
@@ -197,7 +290,7 @@
   border-radius: 14px;
   width: 90%;
   max-width: 360px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  box-shadow: var(--shadow-lg);
   animation: fadeIn 0.25s ease;
 }
 
@@ -228,6 +321,7 @@
   border: none;
   font-weight: 600;
   cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), background-color var(--transition);
 }
 
 .modal button:first-of-type {
@@ -238,6 +332,8 @@
 
 .modal button:first-of-type:hover {
   background-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .close-btn {
@@ -266,10 +362,13 @@
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 0.75rem;
+  transition: transform var(--transition), box-shadow var(--transition), background-color var(--transition);
 }
 
 .google-btn:hover {
   background-color: #357ae8;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .entity-list ul, .entity-form {
@@ -292,10 +391,13 @@
   background-color: var(--primary);
   color: #fff;
   cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), background-color var(--transition);
 }
 
 .create-btn:hover, .entity-form button:hover {
   background-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .error-msg {
@@ -310,6 +412,7 @@ footer {
   padding: 2rem 1rem;
   margin-top: 3rem;
   font-size: 0.95rem;
+  box-shadow: inset 0 6px 12px rgba(0,0,0,0.1);
 }
 
 footer a, footer span {
@@ -350,12 +453,14 @@ footer span:focus {
 .footer-links li {
   cursor: pointer;
   font-weight: 500;
+  transition: color var(--transition), transform var(--transition);
 }
 
 .footer-links li:hover,
 .footer-links li:focus {
   color: var(--accent);
   outline: none;
+  transform: translateY(-1px);
 }
 
 @media (max-width: 600px) {

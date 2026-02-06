@@ -4,9 +4,11 @@ function Login() {
   const { t } = useLocale();
   const params = new URLSearchParams(window.location.search);
   const error = params.get("error");
+  const apiBase = import.meta.env.VITE_API_BASE ?? 'http://localhost:5002/api';
+  const authBase = apiBase.replace(/\/api\/?$/, '');
 
-  const startSocialLogin = (provider = 'google') => {
-    window.location.href = `/auth/${provider}`;
+  const startSocialLogin = () => {
+    window.location.href = `${authBase}/auth/login`;
   };
 
   return (
@@ -18,10 +20,10 @@ function Login() {
         </div>
       )}
       <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={() => startSocialLogin('google')} aria-label={`${t('loginWith')} Google`}>
+        <button onClick={startSocialLogin} aria-label={`${t('loginWith')} Google`}>
           {t('loginWith')} Google
         </button>
-        <button onClick={() => startSocialLogin('github')} aria-label={`${t('loginWith')} GitHub`}>
+        <button onClick={startSocialLogin} aria-label={`${t('loginWith')} GitHub`}>
           {t('loginWith')} GitHub
         </button>
       </div>

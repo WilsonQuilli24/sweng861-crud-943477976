@@ -5,11 +5,13 @@
   padding: 0 1rem;
   color: var(--text-dark);
   line-height: 1.6;
+  animation: pageFade 0.4s ease;
 }
 
 .home-hero {
   text-align: center;
   margin-bottom: 3rem;
+  animation: floatIn 0.5s ease;
 }
 
 .home-hero h1 {
@@ -30,13 +32,14 @@
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .hero-btn:hover,
-.hero-btn:focus {
+.hero-btn:focus-visible {
   background-color: var(--accent);
-  outline: none;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .home-cards {
@@ -53,12 +56,13 @@
   padding: 1.5rem;
   width: 280px;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
 }
 
 .card h2 {
@@ -79,13 +83,14 @@
   border-radius: 6px;
   text-decoration: none;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-btn:hover,
-.card-btn:focus {
+.card-btn:focus-visible {
   background-color: var(--accent);
-  outline: none;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 @media (max-width: 768px) {
@@ -117,7 +122,7 @@
   padding: 0 1rem;
   color: var(--text-dark);
   line-height: 1.6;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: pageFade 0.4s ease;
 }
 
 .about-hero {
@@ -126,7 +131,7 @@
   background: var(--bg-light);
   padding: 2rem 1rem;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 .about-hero h1 {
@@ -180,7 +185,13 @@
   background: #ffffff;
   padding: 1.5rem 1rem;
   border-radius: 10px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.about-content section:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 
 @media (max-width: 768px) {
@@ -249,6 +260,7 @@
   margin: 2rem auto;
   padding: 0 1rem;
   color: var(--text-dark);
+  animation: pageFade 0.4s ease;
 }
 
 .breeds-container h1 {
@@ -289,13 +301,13 @@
   gap: 0.75rem;
   text-decoration: none;
   color: var(--secondary);
+  box-shadow: var(--shadow-sm);
 }
 
 .breed-card:hover,
-.breed-card:focus {
+.breed-card:focus-visible {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-  outline: none;
+  box-shadow: var(--shadow-md);
 }
 
 .breed-card img {
@@ -333,5 +345,25 @@
 @media (max-width: 480px) {
   .breeds-container h1 {
     font-size: 1.6rem;
+  }
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
