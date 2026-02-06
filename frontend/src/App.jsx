@@ -7,9 +7,8 @@ import { useEffect } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import BreedDetail from "./pages/BreedDetail.jsx";
 import BreedForm from "./pages/breeds/BreedForm.jsx";
-import Navbar from './components/Navbar.jsx';
 import Login from "./pages/Login.jsx";
-import { LocaleProvider } from './i18n.js';
+import { LocaleProvider } from './i18n.jsx';
 
 function App() {
   const navigate = useNavigate();
@@ -30,7 +29,6 @@ function App() {
   
   return (
     <LocaleProvider>
-      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />

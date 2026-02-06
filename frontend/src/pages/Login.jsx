@@ -1,4 +1,4 @@
-import { useLocale } from '../i18n.js';
+import { useLocale } from '../useLocale';
 
 function Login() {
   const { t } = useLocale();

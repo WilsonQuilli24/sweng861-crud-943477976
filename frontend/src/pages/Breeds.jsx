@@ -3,7 +3,7 @@ import Footer from '../components/Footer.jsx';
 import Navbar from '../components/Navbar.jsx';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useLocale } from '../i18n.js';
+import { useLocale } from '../useLocale';
 import { apiFetch } from '../services/apiClient.js';
 
 function Breeds() {
@@ -15,7 +15,14 @@ function Breeds() {
     const fetchBreeds = async () => {
       try {
         const data = await apiFetch("/breeds");
-        if (data) setBreeds(data);
+        if (Array.isArray(data)) {
+          setBreeds(data);
+        } else if (data && Array.isArray(data.breeds)) {
+          setBreeds(data.breeds);
+        } else {
+          console.error("Unexpected response format:", data);
+          setError("Failed to load breeds. Invalid response format.");
+        }
       } catch (err) {
         console.error("Error fetching breeds:", err);
         setError("Failed to load breeds. Please try again.");
@@ -43,7 +50,7 @@ function Breeds() {
         {loading && <p className="loading">{t('loading')}</p>}
         {error && <p className="error">{t('couldNotLoad')}</p>}
 
-        {!loading && !error && (
+        {!loading && !error && breeds.length > 0 && (
           <div className="breeds-grid">
             {breeds.map((b) => (
               <Link to={`/breeds/${b.id}`} key={b.id} className="breed-card">

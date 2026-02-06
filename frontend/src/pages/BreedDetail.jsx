@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { apiFetch } from "../services/apiClient.js";
-import api from "../services/apiClient.js";
-import { useLocale } from '../i18n.js';
+import { useLocale } from '../useLocale';
 
 function BreedDetail() {
   const { id } = useParams();
+  const { t } = useLocale();
   const [breed, setBreed] = useState("");
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -24,21 +24,8 @@ function BreedDetail() {
 
         const actualBreed = (data.breed || "").toLowerCase();
         setBreed(actualBreed);
-
-        try {
-          const resp = await api.get(
-            `https://dog.ceo/api/breed/${actualBreed}/images/random`
-          );
-          const jsonImg = resp.data;
-          if (jsonImg?.status === "success") {
-            setImage(jsonImg.message);
-          } else {
-            setImage("/placeholder-dog.jpg");
-          }
-        } catch (err) {
-          console.warn("Image fetch failed", err);
-          setImage("/placeholder-dog.jpg");
-        }
+        // Build image URL - use a direct img tag to avoid CORS
+        setImage(`https://dog.ceo/api/breed/${actualBreed}/images/random`);
       } catch (err) {
         if (err?.response?.status === 404) {
           setErrorMsg("This item does not exist or has been deleted.");
@@ -55,9 +42,6 @@ function BreedDetail() {
 
     fetchBreedAndImage();
   }, [id]);
-
-  if (loading) return <p>Loading...</p>;
-  const { t } = useLocale();
 
   if (loading) return <p>{t('loading')}</p>;
   if (errorMsg)

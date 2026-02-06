@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiFetch, apiPost, apiPut } from "../../services/apiClient.js";
-import { useLocale } from '../../i18n.js';
+import { useLocale } from '../../useLocale';
 
 function BreedForm() {
   const { id } = useParams();

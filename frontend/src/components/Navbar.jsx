@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './components.css';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginModal from './Login';
-import { useLocale } from '../i18n.js';
+import { useLocale } from '../useLocale';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
