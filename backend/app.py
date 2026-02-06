@@ -12,11 +12,13 @@ from time import time
 import sqlite3
 import jwt  
 from flasgger import Swagger
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev")
+CORS(app, supports_credentials=True)
 Swagger(app)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir, 'users.db')}"
@@ -170,12 +172,8 @@ def auth_callback():
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
-    return jsonify({
-        "message": "Login successful",
-        "email": email,
-        "name": name,
-        "token": token
-    })
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    return redirect(f"{frontend_url}/?token={token}")
 
 DOG_API_URL = "https://dog.ceo/api/breeds/list/all"
 
@@ -266,6 +264,18 @@ def create_breed():
     conn.close()
     cached_get_breeds.cache_clear()
     return jsonify({"id": breed_id, "breed": breed_name}), 201
+
+@app.route("/api/breeds/<int:breed_id>", methods=["GET"])
+@require_jwt()
+def get_breed(breed_id):
+    conn = get_dog_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, breed FROM breeds WHERE id = ?", (breed_id,))
+    row = cursor.fetchone()
+    conn.close()
+    if not row:
+        return jsonify({"error": "Breed not found"}), 404
+    return jsonify({"id": row[0], "breed": row[1]})
 
 @app.route("/api/breeds/<int:breed_id>", methods=["PUT"])
 @require_jwt(role="admin")

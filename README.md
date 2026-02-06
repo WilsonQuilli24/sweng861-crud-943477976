@@ -125,3 +125,7 @@ POST /api/breeds/fetch_external
 
 8. DELETE Mini Poodle
 ![Delete Mini Poodle](screenshots/Delete_Mini_Poodle.png)
+
+### How to Run
+Frontend - npm start within frontend folder
+Backend - python3 app.py within backend folder
